@@ -3,17 +3,35 @@
 <h2>Sentencje (lat -> pl)</h2>
 
 <div class="container">
-    <div class="row">
-        <div class="col">
-            @points / @total (@(total > 0 ? ((points / total)*100) : 0)%)
+    @if (started)
+    {
+        <div class="row">
+            <div class="col">
+                @points/@total
+            </div>
         </div>
-    </div>
+    }
 
     <div class="row">
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    @currentText
+                    @if (started)
+                    {
+                        <h6 class="card-subtitle mb-2 text-muted">@currentLang</h6>
+                        <p class="card-text">@currentText</p>
+                    }
+                    else
+                    {
+                        <p><label><input @onchange="@(() => CheckGroup(1))" name="group" type="checkbox" value="1" /> I</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(2))" name="group" type="checkbox" value="2" /> II</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(3))" name="group" type="checkbox" value="3" /> III</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(4))" name="group" type="checkbox" value="4" /> IV</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(5))" name="group" type="checkbox" value="5" /> V</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(6))" name="group" type="checkbox" value="6" /> VI</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(7))" name="group" type="checkbox" value="7" /> VII</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(8))" name="group" type="checkbox" value="8" /> VIII</label></p>
+                    }
                 </div>
             </div>
         </div>
@@ -34,9 +52,11 @@
     @if (showPoints)
     {
         <div class="row mt-3">
-            <div class="col">
-                <button @onclick="AddPoint" class="btn btn-success">+1</button>
-                <button @onclick="Next" class="btn btn-danger">0</button>
+            <div class="col-5 col-sm-2 col-md-1">
+                <button @onclick="AddPoint" class="btn btn-block btn-success">+1</button>
+            </div>
+            <div class="offset-1 col-5 offset-sm-0 col-sm-2 col-md-1">
+                <button @onclick="Next" class="btn btn-block btn-danger">0</button>
             </div>
         </div>
     }
@@ -45,41 +65,64 @@
 @code {
     private (string latin, string polish) currentCard = ("", "");
     private string currentText = string.Empty;
+    private string currentLang = string.Empty;
     private static Random rng = new Random(DateTime.Now.Millisecond);
     private int total = 0;
     private int points = 0;
     private bool showPoints = false;
+    private bool started = false;
+    private List<int> groups = new List<int>();
+    private List<(string latin, string polish)> sentencesList = new List<(string latin, string polish)>();
+
+    void CheckGroup(int value)
+    {
+        if (groups.Contains(value))
+        {
+            groups.Remove(value);
+        }
+        else
+        {
+            groups.Add(value);
+        }
+    }
 
     void Check()
     {
         this.currentText = currentCard.polish;
+        this.currentLang = "polski";
         this.showPoints = true;
     }
 
     void Next()
     {
-        var listNum = rng.Next(1, 4);
-
-        var list = listNum switch
-        {
-            1 => SentencesI,
-            2 => SentencesII,
-            3 => SentencesIII,
-            4 => SentencesIV,
-            5 => SentencesV,
-            6 => SentencesVI,
-            7 => SentencesVII,
-            8 => SentencesVIII,
-        };
-
-        this.currentCard = list[rng.Next(0, list.Count - 1)];
+        this.currentCard = sentencesList[rng.Next(0, sentencesList.Count)];
         this.currentText = this.currentCard.latin;
+        this.currentLang = "łaciński";
         this.total++;
         this.showPoints = false;
     }
 
     void Start()
     {
+        this.started = true;
+
+        foreach (var g in groups)
+        {
+            var list = g switch
+            {
+                1 => SentencesI,
+                2 => SentencesII,
+                3 => SentencesIII,
+                4 => SentencesIV,
+                5 => SentencesV,
+                6 => SentencesVI,
+                7 => SentencesVII,
+                8 => SentencesVIII,
+            };
+
+            sentencesList.AddRange(list);
+        }
+
         Next();
     }
 

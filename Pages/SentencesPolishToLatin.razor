@@ -3,17 +3,35 @@
 <h2>Sentencje (pl -> lat)</h2>
 
 <div class="container">
-    <div class="row">
-        <div class="col">
-            @points/@total (@(total > 0 ? ((points / total)*100) : 0)%)
+    @if (started)
+    {
+        <div class="row">
+            <div class="col">
+                @points/@total
+            </div>
         </div>
-    </div>
+    }
 
     <div class="row">
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    @currentText
+                    @if (started)
+                    {
+                        <h6 class="card-subtitle mb-2 text-muted">@currentLang</h6>
+                        <p class="card-text">@currentText</p>
+                    }
+                    else
+                    {
+                        <p><label><input @onchange="@(() => CheckGroup(1))" name="group" type="checkbox" value="1" /> I</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(2))" name="group" type="checkbox" value="2" /> II</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(3))" name="group" type="checkbox" value="3" /> III</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(4))" name="group" type="checkbox" value="4" /> IV</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(5))" name="group" type="checkbox" value="5" /> V</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(6))" name="group" type="checkbox" value="6" /> VI</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(7))" name="group" type="checkbox" value="7" /> VII</label></p>
+                        <p><label><input @onchange="@(() => CheckGroup(8))" name="group" type="checkbox" value="8" /> VIII</label></p>
+                    }
                 </div>
             </div>
         </div>
@@ -21,7 +39,7 @@
 
     <div class="row mt-3">
         <div class="col">
-            @if(total == 0)
+            @if (total == 0)
             {
                 <button @onclick="Start" class="btn btn-info">Start</button>
             }
@@ -34,9 +52,11 @@
     @if (showPoints)
     {
         <div class="row mt-3">
-            <div class="col">
-                <button @onclick="AddPoint" class="btn btn-success">+1</button>
-                <button @onclick="Next" class="btn btn-danger">0</button>
+            <div class="col-5 col-sm-2 col-md-1">
+                <button @onclick="AddPoint" class="btn btn-block btn-success">+1</button>
+            </div>
+            <div class="offset-1 col-5 offset-sm-0 col-sm-2 col-md-1">
+                <button @onclick="Next" class="btn btn-block btn-danger">0</button>
             </div>
         </div>
     }
@@ -45,41 +65,63 @@
 @code {
     private (string latin, string polish) currentCard = ("", "");
     private string currentText = string.Empty;
+    private string currentLang = string.Empty;
     private static Random rng = new Random(DateTime.Now.Millisecond);
     private int total = 0;
     private int points = 0;
     private bool showPoints = false;
+    private bool started = false;
+    private List<int> groups = new List<int>();
+    private List<(string latin, string polish)> sentencesList = new List<(string latin, string polish)>();
+
+    void CheckGroup(int value)
+    {
+        if (groups.Contains(value))
+        {
+            groups.Remove(value);
+        }
+        else
+        {
+            groups.Add(value);
+        }
+    }
 
     void Check()
     {
         this.currentText = currentCard.latin;
+        this.currentLang = "łaciński";
         this.showPoints = true;
     }
 
     void Next()
     {
-        var listNum = rng.Next(1, 4);
-
-        var list = listNum switch
-        {
-            1 => SentencesI,
-            2 => SentencesII,
-            3 => SentencesIII,
-            4 => SentencesIV,
-            5 => SentencesV,
-            6 => SentencesVI,
-            7 => SentencesVII,
-            8 => SentencesVIII,
-        };
-
-        this.currentCard = list[rng.Next(0, list.Count - 1)];
+        this.currentCard = sentencesList[rng.Next(0, sentencesList.Count)];
         this.currentText = this.currentCard.polish;
+        this.currentLang = "polski";
         this.total++;
         this.showPoints = false;
     }
 
     void Start()
     {
+        this.started = true;
+
+        foreach (var g in groups)
+        {
+            var list = g switch
+            {
+                1 => SentencesI,
+                2 => SentencesII,
+                3 => SentencesIII,
+                4 => SentencesIV,
+                5 => SentencesV,
+                6 => SentencesVI,
+                7 => SentencesVII,
+                8 => SentencesVIII,
+            };
+
+            sentencesList.AddRange(list);
+        }
         Next();
     }
 
@@ -90,7 +132,7 @@
     }
 
     private List<(string latin, string polish)> SentencesI = new List<(string latin, string polish)>
-    {
+{
         ("Hóminum causa omne ius constitútum sit.", "Wszelkie prawo powinno być stanowione ze względu na ludzi. "),
         ("Lex retro non agit.", "Prawo nie działa wstecz."),
         ("Lex próspicit, non réspicit.", "Prawo patrzy w dal, a nie wstecz. "),
@@ -110,7 +152,7 @@
     };
 
     private List<(string latin, string polish)> SentencesII = new List<(string latin, string polish)>
-    {
+{
         ("Cessánte ratióne legis cessat et lex ipsa. ", "Gdy ustaje przyczyna ustawy, ustaje i sama ustawa. "),
         ("Iustitia est constans et perpétua volúntas ius suum cuíque tribuéndi.", "Sprawiedliwość jest stałą i niezmienną wolą oddania każdemu tego, co mu się należy. "),
         ("Lex necessitátis est lex témporis. ", "Ustawa (wydana w chwili) konieczności jest prawem chwili. "),
@@ -131,7 +173,7 @@
     };
 
     private List<(string latin, string polish)> SentencesIII = new List<(string latin, string polish)>
-    {
+{
         ("Libértas inaestimábilis res est.", "Wolność jest rzeczą niedającą się oszacować w pieniądzach. / Wolność jest rzeczą bezcenną. "),
         ("Nascitúrus pro iam nato habétur, quótiens de cómmodis eius ágitur.  ", "Dziecko poczęte uznawane jest za już urodzone, ilekroć chodzi o jego korzyści. "),
         ("Tres fáciunt collégium.", "Trzy osoby tworzą stowarzyszenie. "),
@@ -150,7 +192,7 @@
     };
 
     private List<(string latin, string polish)> SentencesIV = new List<(string latin, string polish)>
-    {
+{
         ("Accéssio cédit principáli.", "Przyrost przypada rzeczy głównej. "),
         ("Nemo invítus compéllitur ad communiónem.", "Nikt nie może być zmuszony do pozostawania we współwłasności. "),
         ("Nemo plus iuris ad alium transférre potest, quam ipse habet.", "Nikt nic może przenieść na drugiego więcej prawa, niż sam ma. "),
@@ -169,7 +211,7 @@
     };
 
     private List<(string latin, string polish)> SentencesV = new List<(string latin, string polish)>
-    {
+{
         ("Impossibílium nulla obligátio est.", "Zobowiązanie do  wykonanie świadczenia niemożliwego jest nieważne.   "),
         ("Ex malefício non orítur contráctus.", "Z bezprawnego działania nie powstaje zobowiązanie umowne. "),
         ("Pacta sunt servánda.", "Umów należy dotrzymywać. "),
@@ -188,7 +230,7 @@
     };
 
     private List<(string latin, string polish)> SentencesVI = new List<(string latin, string polish)>
-    {
+{
         ("Actor séquitur forum rei.", "Powód idzie za sądem pozwanego "),
         ("Audiátur et áltera pars.", "Niech będzie wysłuchana i druga strona. "),
         ("Bis de éadem re agi non potest.", "Nie można procesować się dwa razy o to samo. "),
@@ -208,7 +250,7 @@
     };
 
     private List<(string latin, string polish)> SentencesVII = new List<(string latin, string polish)>
-    {
+{
         ("Accusáre nemo se debet.", "Nikt nie musi oskarżać samego siebie. "),
         ("Bis de éadem ne sit actio.", "Nie procesuje się dwa razy w tej samej sprawie.  "),
         ("Conféssio est regína probatiónum.", "Przyznanie się do winy jest królową dowodów.  "),
@@ -228,7 +270,7 @@
     };
 
     private List<(string latin, string polish)> SentencesVIII = new List<(string latin, string polish)>
-    {
+{
         ("Par in parem non habet iudícium.", "Równy nie może sądzić równego sobie. "),
         ("Lex postérior derógat legi prióri.", "Akt późniejszy uchyla moc obowiązującą aktu wcześniejszego. "),
         ("Pacta tértiis nec nocent nec prosunt.", "Umowy ani nie przyznają praw ani nie nakładają obowiązków na państwa, które nie są ich stronami. "),
