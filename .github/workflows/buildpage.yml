@@ -1,4 +1,4 @@
-name: Blazor WASM Example Page
+name: Build Page
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
           dotnet-version: 5.0.100
 
       - name: Publish ExamplesWASM Project
-        run: dotnet publish LatinForLawyers.csproj.csproj -c Release -o release --nologo
+        run: dotnet publish LatinForLawyers.csproj -c Release -o release --nologo
           
       - name: Change base-tag in index.html
         run: sed -i 's/<base href="\/" \/>/<base href="\/latintopolish\/" \/>/g' release/wwwroot/index.html
