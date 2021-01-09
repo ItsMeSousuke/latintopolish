@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            @points/@total (@(total > 0 ? (points / total*100) : 0)%)
+            @points/@total (@(total > 0 ? ((points / total)*100) : 0)%)
         </div>
     </div>
 
@@ -58,7 +58,7 @@
 
     void Next()
     {
-        var listNum = rng.Next(1, 8);
+        var listNum = rng.Next(1, 4);
 
         var list = listNum switch
         {
