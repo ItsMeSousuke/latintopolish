@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LatinForLawyers", "LatinForLawyers.csproj", "{E560308F-C75E-435E-BB7C-D8C0DDA06D38}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E560308F-C75E-435E-BB7C-D8C0DDA06D38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E560308F-C75E-435E-BB7C-D8C0DDA06D38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E560308F-C75E-435E-BB7C-D8C0DDA06D38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E560308F-C75E-435E-BB7C-D8C0DDA06D38}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D6FEA74-9380-43F3-B5AA-F18D65643C0B}
+	EndGlobalSection
+EndGlobal

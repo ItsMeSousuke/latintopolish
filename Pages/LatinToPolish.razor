@@ -1,0 +1,258 @@
+﻿@page "/LatinToPolish"
+
+<h2>Wyrażenia (lat -> pl)</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            @points / @total (@(total > 0 ? (points / total*100) : 0)%)
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    @currentText
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            @if(total == 0)
+            {
+                <button @onclick="Start" class="btn btn-info">Start</button>
+            }
+            else
+            {
+                <button @onclick="Check" class="btn btn-primary">Sprawdź</button>
+            }
+        </div>
+    </div>
+    @if (showPoints)
+    {
+        <div class="row mt-3">
+            <div class="col">
+                <button @onclick="AddPoint" class="btn btn-success">+1</button>
+                <button @onclick="Next" class="btn btn-danger">0</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private (string latin, string polish) currentCard = ("", "");
+    private string currentText = string.Empty;
+    private static Random rng = new Random(DateTime.Now.Millisecond);
+    private int total = 0;
+    private int points = 0;
+    private bool showPoints = false;
+
+    void Check()
+    {
+        this.currentText = currentCard.polish;
+        this.showPoints = true;
+    }
+
+    void Next()
+    {
+        var listNum = rng.Next(1, 7);
+        
+        var list = listNum switch
+        {
+            1 => WyrazeniaI,
+            2 => WyrazeniaII,
+            3 => WyrazeniaIII,
+            4 => WyrazeniaIV,
+            5 => WyrazeniaV,
+            6 => WyrazeniaVI,
+            7 => WyrazeniaVII,
+        };
+
+        this.currentCard = list[rng.Next(0, list.Count - 1)];
+        this.currentText = this.currentCard.latin;
+        this.total++;
+        this.showPoints = false;
+    }
+
+    void Start()
+    {
+        Next();
+    }
+
+    void AddPoint()
+    {
+        this.points++;
+        Next();
+    }
+
+    private List<(string latin, string polish)> WyrazeniaI = new List<(string latin, string polish)>
+    {
+        ("a contrário", "wychodząc z przeciwnego założenia "),
+        ("a posterióri ", "na podstawie już zaistniałych faktów (wnioskować o przyczynach),  z następstwa, w drodze indukcji "),
+        ("a prióri","bez podstaw, bezzasadnie, bez względu na fakty czy argumenty (wnioskować z „góry”) "),
+        ("ab absúrdo", "wychodząc z fałszywego założenia, absurdu "),
+        ("ab inítio", "od początku "),
+        ("accidentália negótii ", "dodatkowe części składowe czynności prawnej, podmiotowo istotne składniki treści czynności prawnej "),
+        ("ad absúrdum", "rozumowanie prowadzące do niedorzeczności "),
+        ("ad acta (depónere)", "odłożyć do akt, do archiwum (przenośnie: sprawa zakończona) "),
+        ("ad exemplum", "na przyład "),
+        ("ad hoc", "doraźnie, tylko w tym przypadku  "),
+        ("ad líbitum", "w dowolnej ilości "),
+        ("ad lítteram", "dosłownie "),
+        ("ad persónam", "w odniesieniu do (konkretnej) osoby "),
+        ("ad probatiónem", "dla celów dowodowych "),
+        ("ad rem ", "do rzeczy, bez dygresji, do sedna sprawy "),
+        ("ad vocem ", "(nawiązując) do poprzedniej wypowiedzi, do głosu (poprzednika) "),
+        ("advocátus diáboli", "adwokat diabła; określenie obrońcy niesłusznej sprawy "),
+        ("aliéno nómine", "w cudzym imieniu "),
+        ("áltera pars ", "druga strona, przeciwnik w sporze "),
+        ("analógia iuris ", "analogia z prawa ")
+    };
+
+    private List<(string latin, string polish)> WyrazeniaII = new List<(string latin, string polish)>
+    {
+        ("analógia legis ", "analogia z ustawy "),
+        ("ánimus possidéndi pro aliéno", "wola posiadania dla drugiego "),
+        ("ánimus rem sibi habéndi, ánimus possidéndi", "wola posiadania dla siebie "),
+        ("arguméntum a contrário", "uzasadnienie (twierdzenie, dowód) z przeciwieństwa "),
+        ("arguméntum a maióri ad minus", "wnioskowanie z większego o mniejszym "),
+        ("arguméntum a minóri ad maius", "wnioskowanie z mniejszego o większym "),
+        ("benefícium inventárii ", "dobrodziejstwo inwentarza "),
+        ("bona cadúca ", "majątek bez właściciela, dobra przypadające państwu "),
+        ("bona fides, bona fide", "dobra wiara, w dobrej wierze "),
+        ("casus fortúitus ", "przypadek losowy "),
+        ("causa cogníta", "po rozpoznaniu sprawy "),
+        ("causa donándi", "podstawa prawna przysporzeń o charakterze darmym "),
+        ("causa finíta", "sprawa zakończona "),
+        ("causa iusta", "słuszna przyczyna "),
+        ("causa obligándi", "podstawa zaciągnięcia zobowiązania  "),
+        ("clausula rebus sic stantibus", "zastrzeżenie, że umowa obowiązuje w istniejących oklicznościach, które nie ulegną zmianie "),
+        ("commúni consénsu", "za zgodą ogółu, przy powszechnej zgodzie "),
+        ("commúnis opínio ", "powszechny pogląd, powszechna opinia  "),
+        ("condicio sine qua non", "warunek nieodzowny; warunek bez którego nie może zaistnieć dana czynność "),
+        ("contra legem", "wbrew ustawie, sprzecznie z prawem ")
+    };
+
+    private List<(string latin, string polish)> WyrazeniaIII = new List<(string latin, string polish)>
+    {
+        ("contra/advérsus bonos mores", "wbrew (przeciw) dobrym obyczajom "),
+        ("contráriis reiéctis", " po odrzuceniu tezy przeciwnej "),
+        ("corpus delícti ", "przedmiot będący dowodem popełnienia przestępstwa "),
+        ("cui bono? ", "na czyją korzyść? "),
+        ("cui prodest", "komu przynosi to korzyść "),
+        ("culpa in contrahéndo ", "niedbalstwo przy zawieraniu umowy "),
+        ("culpa in custodiéndo ", "wina w dozorze "),
+        ("culpa in eligéndo ", "wina w wyborze "),
+        ("culpa lata ", "ciężka wina "),
+        ("de facto ", "faktycznie, istotnie, w istocie, w rzeczywistości, w praktyce  "),
+        ("de iure", "zgodnie z obowiązującym prawem "),
+        ("de lege ferénda ", "co do przyszłego unormowania, co do prawa postulowanego (o ustawie, która ma być uchwalona) "),
+        ("de lege lata", "z punktu widzenia obowiązującego prawa "),
+        ("desuetúdo ", "utrata mocy obowiązującej aktu prawnego wskutek jego długotrwałego niestosowania lub nieprzestrzegania "),
+        ("diligentia quam suis rebus", "staranność właściwa przy prowadzeniu własnych spraw "),
+        ("dolus malus, dolo male", "szczególnie zły zamiar, w złym zamiarze "),
+        ("erga omnes", "wobec wszystkich "),
+        ("error facti", "błąd co do faktu (stanu faktycznego)  "),
+        ("error in persona", "błąd co do osoby  "),
+        ("error iuris ", "błąd co do prawa")
+    };
+
+    private List<(string latin, string polish)> WyrazeniaIV = new List<(string latin, string polish)>
+    {
+        ("essentiália negótii ", "przedmiotowo istotne składniki treści czynności prawnej "),
+        ("et cétera", "i tak dalej"),
+        ("ex iure (lege)", "z mocy prawa (ustawy) "),
+        ("ex nunc ", "od teraz, od tej chwili  "),
+        ("ex offício", "z urzędu "),
+        ("ex tunc ", "od wtedy, od tamtej chwili, z mocą wsteczną "),
+        ("expréssis verbis ", "dobitnymi słowami, wyraźnie, dokładnie, dobitnie "),
+        ("extra órdinem", "poza porządkiem "),
+        ("facta concludéntia", "zdarzenia faktyczne, które wyrażają domniemaną wolę danej osoby; wyrażenie określające dorozumiane oświadczenie woli "),
+        ("favor debitóris", "ochrona dłużnika, przychylność dla dłużnika "),
+        ("favor testaménti ", "przychylna interpretacja testamentu "),
+        ("forum contráctus", "sąd właściwy ze względu na miejsce zawarcia umowy "),
+        ("forum delícti comíssi", "sąd właściwy ze względu na miejsce popełnienia przestępstwa "),
+        ("forum domicílli", "sąd właściwy ze względu na miejsce zamieszkania "),
+        ("forum rei sitae", "sąd właściwy ze względu na miejsce położenia rzeczy  "),
+        ("in abséntia", "pod nieobecność, podczas nieobecności  "),
+        ("in abstrácto ", "w oderwaniu (od konkretnej sytuacji) "),
+        ("incompatibílitas", "zakaz równoczesnego piastowania określonych stanowisk publicznych "),
+        ("in exténso", "w całości, dokładnie, w pełnym brzmieniu, w całej rozciągłości "),
+        ("in flagránti", "na gorącym uczynku ")
+    };
+
+    private List<(string latin, string polish)> WyrazeniaV = new List<(string latin, string polish)>
+    {
+        ("in fraudem legis", "w celu obejścia ustawy "),
+        ("in futúro", "na przyszłość "),
+        ("in nómine", "w imieniu, z polecenia  "),
+        ("in spe", "w nadziei, w przyszłości "),
+        ("inter partes", "między stronami "),
+        ("inter praeséntes (abséntes)", "między obecnymi (nieobecnymi)  "),
+        ("inter vivos", "między żyjącymi "),
+        ("ipso facto ", "tym samym, z samego faktu, na mocy samego faktu "),
+        ("ipso iure", "mocy prawa, z mocy samego prawa "),
+        ("ius cogens", "przepisy bezwzględnie obowiązujące  "),
+        ("ius dispositívum", "przepisy względnie obowiązujące  "),
+        ("ius sánguinis", "prawo krwi (zasada nabycia obywatelstwa) "),
+        ("lege artis", "prawidłowo, według reguł sztuki "),
+        ("lex generális ", "ustawa ogólna "),
+        ("lex imperfécta", "norma prawna pozbawiona jakiejkolwiek sankcji  "),
+        ("lex minus quam perfécta", "norma prawna opatrzona sankcją represyjną (karną) "),
+        ("lex perfecta", "norma prawna opatrzona sankcją nieważności "),
+        ("lex plus quam perfecta", "to norma prawna opatrzona sankcją represyjną (karną) oraz sankcją nieważności "),
+        ("lex speciális", "ustawa specjalna, przepis szczególny  "),
+        ("lucrum cessans", "utracony zysk ")
+    };
+
+    private List<(string latin, string polish)> WyrazeniaVI = new List<(string latin, string polish)>
+    {
+        ("modus operándi", "sposób działania "),
+        ("mortis causa ", "na wypadek śmierci "),
+        ("mutátis mutándis", "po zmianie tego, co powinno być zmienione "),
+        ("naturália negótii ", "przedmiotowo nieistotne składniki treści czynności prawnej  "),
+        ("negótium claúdicans ", "czynność prawna kulejąca  "),
+        ("non liquet ", "nie jest jasne "),
+        ("nuúmerus clausus", "określona liczba, liczba zamknięta, ograniczona, wyliczenie enumeratywne  "),
+        ("onus probándi", "ciężar dowodu "),
+        ("ope exceptiónis", "mocą zarzutu procesowego "),
+        ("pars legítima", "zachowek "),
+        ("per analogiam ", "przez podobieństwo, analogię  "),
+        ("per procúra", "w zastępstwie, na podstawie pełnomocnictwa "),
+        ("persóna non grata", "osoba niepożądana  "),
+        ("post factum", "po fakcie  "),
+        ("post mortem", "po śmierci "),
+        ("pro público bono", "dla dobra publicznego "),
+        ("quorum", "liczba członków podmiotu zbiorowego, których obecność podczas głosowania jest konieczna, aby decyzje w nim podjęte były ważne "),
+        ("ratio legis ", "cel ustawy, racja prawna, uzasadnienie ustawy "),
+        ("redúctio ad absúrdum", "sprowadzenie rozumowania do niedorzeczności "),
+        ("reformátio in peius ", "zmiana na gorsze, zmiana orzeczenia na niekorzystne ")
+    };
+
+    private List<(string latin, string polish)> WyrazeniaVII = new List<(string latin, string polish)>
+    {
+        ("sensu largo ", "w szerokim znaczeniu "),
+        ("sensu stricto ", "w ścisłym znaczeniu "),
+        ("solo consensu", "samym porozumieniem, z samego porozumienia "),
+        ("status quo", "obecny stan rzeczy "),
+        ("sub condicióne", "pod warunkiem "),
+        ("succéssio singuláris", "sukcesja szczególna "),
+        ("successio universális", "sukcesja ogólna (uniwersalna) "),
+        ("términus a quo", "termin początkowy (od którego rozpoczynają się skutki czynności prawnej) "),
+        ("términus ad quem", "termin końcowy (do którego trwają skutki czynności prawnej) "),
+        ("términus ante quem", "termin, przed którym coś nastąpiło lub ma nastąpić "),
+        ("terminus post quem", "termin, po którym coś ma nastąpić "),
+        ("términus praeclusivus", "termin ostateczny (prekluzyjny) "),
+        ("tertium non datur", "nie ma trzeciej możliwości "),
+        ("ut infra", "jak niżej "),
+        ("ut supra", "jak wyżej "),
+        ("vacátio legis ", "okres pomiędzy ogłoszeniem aktu prawnego a jego wejściem w życie "),
+        ("vis absolúta", "przymus fizyczny "),
+        ("vis compulsíva ", "przymus psychiczny "),
+        ("vis maior ", "siła wyższa "),
+        ("votum separatum", "głos odrębny")
+    };
+}
